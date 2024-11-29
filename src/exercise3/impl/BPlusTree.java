@@ -109,12 +109,14 @@ public class BPlusTree<K extends Comparable<? super K>, V> {
         pos = -pos - 1;
         leaf.records.add(pos, newRecord);
         newRecord.setValue(value);
+
         // Check for overflow
         if (leaf.records.size() > ENTRY_COUNT) {
             Node sibling = leaf.split();
 
             promote(leaf, sibling, leaf.records.getFirst().key); // Promote the first key in the sibling
         }
+
         return null;
     }
 
@@ -122,6 +124,7 @@ public class BPlusTree<K extends Comparable<? super K>, V> {
         if (node.isLeaf()) {
             return (LeafNode) node;
         }
+
         IndexNode index = (IndexNode) node;
         int pos = Collections.binarySearch(index.keys, key);
         pos = pos >= 0 ? pos + 1 : -pos - 1;
@@ -169,6 +172,7 @@ public class BPlusTree<K extends Comparable<? super K>, V> {
 
     public V pointQuery(K key) {
         // TODO: Impl.
+        //return null;
         LeafNode leaf = findLeafNode(root, key); // Find the appropriate leaf node
         Record searchRecord = new Record(key);
         int pos = Collections.binarySearch(leaf.records, searchRecord);
@@ -206,6 +210,7 @@ public class BPlusTree<K extends Comparable<? super K>, V> {
 
             for (int j = 0; j <= i; j++) {
                 if (!tree.pointQuery(i).equals("Node" + i)) {
+
                     throw new RuntimeException("Key not found: " + j);
                 }
             }
@@ -215,7 +220,7 @@ public class BPlusTree<K extends Comparable<? super K>, V> {
                 throw new RuntimeException("Range query failed at key " + i);
             }
         }
-        System.out.println("Key not found: ");
+     
         System.out.println(tree.root);
         System.out.println(tree.root.isLeaf());
         System.out.println(tree.pointQuery(60));
